@@ -62,6 +62,8 @@ if __name__ == '__main__':
                         """Send a heart beat to aws"""
                         queue.record_lifecycle_action_heartbeat(message)
             """Send a complete lifecycle action"""
+            logging.exception('Commands executed, waiting for 10 seconds just to be sure we are cool')
+            time.sleep(10)
             queue.complete_lifecycle_action(message)
             sys.exit(0)
       except SystemExit:
