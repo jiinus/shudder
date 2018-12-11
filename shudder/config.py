@@ -16,8 +16,11 @@
 import os
 import toml
 
+if len(sys.argv) > 1:
+	CONFIG_FILE = sys.argv[1]
+else:
+	CONFIG_FILE = os.environ.get('CONFIG_FILE', "shudder.toml")
 
-CONFIG_FILE = os.environ.get('CONFIG_FILE', "shudder.toml")
 CONFIG = {}
 
 with open(CONFIG_FILE, 'r') as f:
