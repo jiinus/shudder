@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Configuration for shudder"""
+import sys
 import os
 import toml
 
