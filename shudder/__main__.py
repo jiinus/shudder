@@ -31,8 +31,9 @@ logging.basicConfig(filename=LOG_FILE,format='%(asctime)s %(levelname)s:%(messag
 def receive_signal(signum, stack):
     if signum in [1,2,3,15]:
         print 'Caught signal %s, exiting.' %(str(signum))
-        sys.exit()
-    else:        print 'Caught signal %s, ignoring.' %(str(signum))
+        sys.exit(0)
+    else:
+        print 'Caught signal %s, ignoring.' %(str(signum))
 
 if __name__ == '__main__':
     uncatchable = ['SIG_DFL','SIGSTOP','SIGKILL']
@@ -64,8 +65,11 @@ if __name__ == '__main__':
             """Send a complete lifecycle action"""
             queue.complete_lifecycle_action(message)
             sys.exit(0)
-        time.sleep(5)
+      except SystemExit:
+        break
       except ConnectionError:
         logging.exception('Connection issue')
       except:
         logging.exception('Something went wrong')
+      finally:
+        time.sleep(5)
