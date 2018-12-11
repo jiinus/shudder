@@ -55,19 +55,19 @@ if __name__ == '__main__':
                     requests.get(endpoint)
             if 'commands' in CONFIG:
                 for command in CONFIG["commands"]:
-                    logging.exception('Running command: %s' % command)
+                    logging.info('Running command: %s' % command)
                     process = subprocess.Popen(command)
                     while process.poll() is None:
                         time.sleep(30)
                         """Send a heart beat to aws"""
                         queue.record_lifecycle_action_heartbeat(message)
             """Send a complete lifecycle action"""
-            logging.exception('Commands executed, waiting for 10 seconds just to be sure we are cool')
+            logging.info('Commands executed, waiting for 10 seconds just to be sure we are cool')
             time.sleep(10)
             queue.complete_lifecycle_action(message)
             sys.exit(0)
       except SystemExit:
-        logging.exception('Exiting, cleaning SNS')
+        logging.info('Exiting, cleaning SNS')
         queue.clean_up_sns(sns_connection, subscription_arn, sqs_queue)
         break
       except ConnectionError:
