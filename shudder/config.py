@@ -26,7 +26,7 @@ CONFIG = {}
 
 with open(CONFIG_FILE, 'r') as f:
     CONFIG = toml.loads(f.read())
-    if 'logfile' in  CONFIG.values():
+    if 'logfile' in CONFIG.keys():
       LOG_FILE = CONFIG['logfile']
     else:
       LOG_FILE = os.environ.get('LOG_FILE', '/var/log/shudder.log')
