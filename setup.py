@@ -10,7 +10,7 @@ with open('requirements.txt') as f:
 setup(
     name='shudder',
     description="Graceful shutdowns using autoscaling lifecycle hooks.",
-    version='0.2.1',
+    version='0.2.2',
     long_description=__doc__,
     packages=find_packages(),
     include_package_data=True,

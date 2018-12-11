@@ -30,10 +30,10 @@ logging.basicConfig(filename=LOG_FILE,format='%(asctime)s %(levelname)s:%(messag
 
 def receive_signal(signum, stack):
     if signum in [1,2,3,15]:
-        print 'Caught signal %s, exiting.' %(str(signum))
+        logging.exception('Caught signal %s, exiting.' %(str(signum)))
         sys.exit(0)
     else:
-        print 'Caught signal %s, ignoring.' %(str(signum))
+        logging.exception('Caught signal %s, ignoring.' %(str(signum)))
 
 if __name__ == '__main__':
     uncatchable = ['SIG_DFL','SIGSTOP','SIGKILL']
@@ -48,7 +48,6 @@ if __name__ == '__main__':
       try:
         message = queue.poll_queue(sqs_connection, sqs_queue)
         if message or metadata.poll_instance_metadata():
-            queue.clean_up_sns(sns_connection, subscription_arn, sqs_queue)
             if 'endpoint' in CONFIG:
                 requests.get(CONFIG["endpoint"])
             if 'endpoints' in CONFIG:
@@ -56,7 +55,7 @@ if __name__ == '__main__':
                     requests.get(endpoint)
             if 'commands' in CONFIG:
                 for command in CONFIG["commands"]:
-                    print 'Running command: %s' % command
+                    logging.exception('Running command: %s' % command)
                     process = subprocess.Popen(command)
                     while process.poll() is None:
                         time.sleep(30)
@@ -66,6 +65,8 @@ if __name__ == '__main__':
             queue.complete_lifecycle_action(message)
             sys.exit(0)
       except SystemExit:
+        logging.exception('Exiting, cleaning SNS')
+        queue.clean_up_sns(sns_connection, subscription_arn, sqs_queue)
         break
       except ConnectionError:
         logging.exception('Connection issue')
