@@ -57,13 +57,12 @@ if __name__ == '__main__':
                 for command in CONFIG["commands"]:
                     logging.info('Running command: %s' % command)
                     process = subprocess.Popen(command)
+                    time.sleep(15)
                     while process.poll() is None:
-                        time.sleep(30)
                         """Send a heart beat to aws"""
                         queue.record_lifecycle_action_heartbeat(message)
+                        time.sleep(30)
             """Send a complete lifecycle action"""
-            logging.info('Commands executed, waiting for 10 seconds just to be sure we are cool')
-            time.sleep(10)
             queue.complete_lifecycle_action(message)
             sys.exit(0)
       except SystemExit:
